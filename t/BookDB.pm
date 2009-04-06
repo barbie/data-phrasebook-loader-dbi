@@ -71,7 +71,7 @@ sub execute {
 		}
 	}
 
-    elsif($query =~ /SELECT dictonary FROM  phrasebook/) {
+    elsif($query =~ /SELECT dictionary FROM  phrasebook/) {
 		$dbh->{array} = [['DEF'],['ONE']];
 	}
 }

@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 =head1 NAME
 
@@ -59,6 +59,12 @@ a specific dictionary is requested.
 This module provides a base class for phrasebook implementations via a database.
 Note that the order of table columns is significant. If there is no dictionary
 field, all entries are assumed to be part of the default dictionary.
+
+=head1 DICTIONARIES
+
+In the instance where a dictionary column is specified, but no dictionary name
+is set, all dictionaries are searched, returned in lexical order native to the
+DB.
 
 =head1 INHERITANCE
 
@@ -138,23 +144,44 @@ Returns the phrase stored in the phrasebook, for a given keyword.
 
 sub get {
     my ($self,$key) = @_;
+    my $dict_set = 0;
 
 	my $sql =
 			'SELECT '.$self->{file}{dbcolumns}[1].
 			' FROM  '.$self->{file}{dbtable}.
 			' WHERE '.$self->{file}{dbcolumns}[0].'=?';
-	$sql .= ' AND   '.$self->{file}{dbcolumns}[2].'=?'	
-		if($self->{file}{dbcolumns}[2]);
+
+	if($self->{file}{dbcolumns}[2]) {
+        if($self->{dict}) {
+	        $sql .= ' AND   '.$self->{file}{dbcolumns}[2].'=?';
+            $dict_set = 1;
+        } else {
+	        $sql .= ' ORDER BY '.$self->{file}{dbcolumns}[2];
+        }
+    }
 
 	my $sth = $self->{dbh}->prepare($sql);
-	if($self->{file}{dbcolumns}[2]) {
-		$sth->execute($key,$self->{dict});
-	} else {
-		$sth->execute($key);
-	}
+	if($dict_set)   { $sth->execute($key,$self->{dict}); }
+    else            { $sth->execute($key); }
 	my @row = $sth->fetchrow_array;
 	$sth->finish;
-	return $row[0];
+
+	return $row[0]  if(@row);
+    return undef    unless($dict_set);
+
+	$sql =	'SELECT '.$self->{file}{dbcolumns}[1].
+			' FROM  '.$self->{file}{dbtable}.
+			' WHERE '.$self->{file}{dbcolumns}[0].'=?'.
+	        ' ORDER BY '.$self->{file}{dbcolumns}[2];
+
+	$sth = $self->{dbh}->prepare($sql);
+	if($dict_set)   { $sth->execute($key,$self->{dict}); }
+    else            { $sth->execute($key); }
+	@row = $sth->fetchrow_array;
+	$sth->finish;
+
+	return $row[0]  if(@row);
+    return undef;
 }
 
 =head2 dicts

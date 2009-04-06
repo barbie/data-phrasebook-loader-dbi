@@ -1,5 +1,8 @@
 # Changes log for Data::Phrasebook::Loader::DBI
 
+0.07	16/06/2005
+        - updated dictionary support features
+
 0.06	15/06/2005
 	- upped prerequisite for Data::Phrasebook to 0.22.
 
