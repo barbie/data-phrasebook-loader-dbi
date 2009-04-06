@@ -1,10 +1,15 @@
 # Changes log for Data::Phrasebook::Loader::DBI
 
+0.08	22/09/2005
+        - Added keywords() support
+	- Added tests
+	- Upped prerequisite for Data::Phrasebook to 0.24.
+
 0.07	16/06/2005
-        - updated dictionary support features
+        - Updated dictionary support features
 
 0.06	15/06/2005
-	- upped prerequisite for Data::Phrasebook to 0.22.
+	- Upped prerequisite for Data::Phrasebook to 0.22.
 
 0.05    14/06/2005
         - Added dicts() support

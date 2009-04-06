@@ -74,6 +74,14 @@ sub execute {
     elsif($query =~ /SELECT dictionary FROM  phrasebook/) {
 		$dbh->{array} = [['DEF'],['ONE']];
 	}
+
+    elsif($query =~ /SELECT keyword FROM  phrasebook WHERE dictionary=\?/) {
+		$dbh->{array} = [['foo'],['bar']];
+	}
+
+    elsif($query =~ /SELECT keyword FROM  phrasebook/) {
+		$dbh->{array} = [['foo'],['baz']];
+	}
 }
 sub fetchrow_hashref {
 	return shift @{$dbh->{hash}}}

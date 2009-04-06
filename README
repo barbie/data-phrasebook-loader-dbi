@@ -13,7 +13,7 @@ DEPENDENCIES
 
 The distribution requires the following modules:
 
-  Data::Phrasebook    >= 0.18
+  Data::Phrasebook    >= 0.24
   DBI                 >= 1.38
 
 For testing purposes, the following modules are required:

@@ -3,7 +3,7 @@ WriteMakefile(
     NAME            => 'Data::Phrasebook::Loader::DBI',
     VERSION_FROM    => 'lib/Data/Phrasebook/Loader/DBI.pm',
     PREREQ_PM       => {
-        'Data::Phrasebook' => '0.22',
+        'Data::Phrasebook' => '0.24',
         'DBI'              => '1.38',
         'Test::More'       => '0.47',
     },

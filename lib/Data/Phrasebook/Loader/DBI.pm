@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 =head1 NAME
 
@@ -207,6 +207,43 @@ sub dicts {
 	$sth->finish;
 
 	return map {$_->[0]} @$row;
+}
+
+=head2 keywords
+
+Returns the list of keywords available. List is lexically sorted.
+
+   my @keywords = $loader->keywords();
+
+=cut
+
+sub keywords {
+    my $self = shift;
+    my $dict_set = 0;
+
+	my $sql =
+			'SELECT '.$self->{file}{dbcolumns}[0].
+			' FROM  '.$self->{file}{dbtable};
+
+	if($self->{file}{dbcolumns}[2]) {
+        if($self->{dict}) {
+	        $sql .= ' WHERE '.$self->{file}{dbcolumns}[2].'=?';
+            $dict_set = 1;
+        } else {
+	        $sql .= ' ORDER BY '.$self->{file}{dbcolumns}[2];
+        }
+    }
+
+	my $sth = $self->{dbh}->prepare($sql);
+	if($dict_set)   { $sth->execute($self->{dict}); }
+    else            { $sth->execute(); }
+	my $rows = $sth->fetchall_arrayref;
+	$sth->finish;
+
+    my @keywords;
+    push @keywords, $_->[0]   for(@$rows);
+    return ()   unless(@keywords);
+	return sort @keywords;
 }
 
 sub DESTROY {

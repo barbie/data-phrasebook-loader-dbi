@@ -3,7 +3,7 @@ use strict;
 use lib 't';
 use BookDB;
 
-use Test::More tests => 22;
+use Test::More tests => 23;
 
 # ------------------------------------------------------------------------
 
@@ -140,6 +140,10 @@ SKIP: {
     my @expected = qw(DEF ONE);
     my @dicts = $obj->dicts();
     is_deeply( \@dicts, \@expected, 'Checking dictionaries' );
+
+       @expected = qw(bar foo);
+    my @keywords = $obj->keywords();
+    is_deeply( \@keywords, \@expected, 'Checking keywords' );
 }
 
 sub load_test {
