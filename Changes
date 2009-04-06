@@ -1,7 +1,15 @@
 # Changes log for Data::Phrasebook::Loader::DBI
 
+0.11	01/03/2007
+	- Fixed load testing bug that's been hanging a round for a while. 
+	- Added Test::MockObject to list of recommends in META.yml.
+	- Added some more validation to load().
+	- Rewrote get() to handle ordered dictionary searches.
+	- more tests.
+	- Devel::Cover = 99.2%
+
 0.10	22/02/2007
-	- Fixed typo in META.yml
+	- Fixed typo in META.yml.
 
 0.09	22/02/2007
 	- Handwritten META.yml to conform to current specs.

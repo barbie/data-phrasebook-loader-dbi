@@ -1,7 +1,7 @@
 package BookDB;
 
 my $dbh;
-my $bind = '';
+my @bind;
 my $oldq = '';
 
 sub new
@@ -44,52 +44,47 @@ sub rebind {
 sub bind_param {
 	shift;
 #print STDERR "\n#bind_param(@_)\n";
-	$bind = $_[1];
+	@bind = ($_[1]);
 	return;
 }
 sub execute {
 	shift; 
 	my $query = $dbh->{sql} || $oldq;
-	my $arg = @_ ? $_[0] : $bind;
+	my @args = @_ ? @_ : @bind;
 
-	$bind = $arg;
+	@bind = @args;
 	$oldq = $query;
 	return	unless($query);
 
 #print STDERR "\n# query=[$query]\n";
-#print STDERR "\n# arg=[$arg]\n";
+#print STDERR "\n# args=[@args]\n";
 
-	if($query =~ /SELECT phrase FROM  phrasebook WHERE keyword=\? AND   dictionary=\?/) {
-		if($arg && $arg =~ /foo/) {
-		$dbh->{array} = ['Welcome to [% my %] world. It is a nice [% place %].'];
-		}
+	if($query =~ /SELECT phrase FROM  phrasebook WHERE keyword=\? AND   dictionary=\?/
+        && @args == 2 && $args[0] =~ /foo/ && $args[1] ne 'ONE') {
+    		$dbh->{array} = ['Welcome to [% my %] world. It is a nice [% place %].'];
 	}
 
-	elsif($query =~ /SELECT phrase FROM  phrasebook WHERE keyword=\?/) {
-		if($arg && $arg =~ /foo/) {
-		$dbh->{array} = ['Welcome to [% my %] world. It is a nice [% place %].'];
-		}
+	elsif($query =~ /SELECT phrase FROM  phrasebook WHERE keyword=\?/
+        && @args && $args[0] =~ /foo/) {
+    		$dbh->{array} = ['Welcome to [% my %] world. It is a nice [% place %].'];
 	}
 
     elsif($query =~ /SELECT dictionary FROM  phrasebook/) {
 		$dbh->{array} = [['DEF'],['ONE']];
 	}
 
-    elsif($query =~ /SELECT keyword FROM  phrasebook WHERE dictionary=\?/) {
+    elsif($query =~ /SELECT keyword FROM  phrasebook/) {
 		$dbh->{array} = [['foo'],['bar']];
 	}
 
-    elsif($query =~ /SELECT keyword FROM  phrasebook/) {
-		$dbh->{array} = [['foo'],['baz']];
-	}
+    else {
+		$dbh->{array} = undef;
+    }
 }
-sub fetchrow_hashref {
-	return shift @{$dbh->{hash}}}
-sub fetchall_arrayref {
-	return \@{$dbh->{array}}}
-sub fetchrow_array {
-	return shift @{$dbh->{array}}}
-sub finish { $dbh->{sql} = undef }
+sub fetchrow_hashref    { return $dbh->{hash}  ? shift @{$dbh->{hash}}  : undef } 
+sub fetchall_arrayref   { return $dbh->{array} ? \@{$dbh->{array}}      : undef }
+sub fetchrow_array      { return $dbh->{array} ? shift @{$dbh->{array}} : ();   }
+sub finish              { $dbh->{sql} = undef }
 
 sub connect { new(@_); $dbh }
 

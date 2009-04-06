@@ -3,7 +3,7 @@ use strict;
 use lib 't';
 use BookDB;
 
-use Test::More tests => 23;
+use Test::More tests => 33;
 
 # ------------------------------------------------------------------------
 
@@ -51,111 +51,166 @@ BEGIN {
 # ------------------------------------------------------------------------
 
 SKIP: {
-    skip "Test::MockObject required for testing", 16 if $nomock;
+    skip "Test::MockObject required for testing", 32 if $nomock;
 
-    my $obj = $class->new();
-    isa_ok($obj, $class, 'Checking class');
+    {
+        my $obj = $class->new();
+        isa_ok($obj, $class, 'Checking class');
 
-    my $file = {
-        dbh       => $dbh,
-        dbcolumns => ['keyword','phrase','dictionary'],
-    };
+        eval { $obj->load(); };
+        ok($@, 'Test load failed - no file');
 
-    eval { $obj->load( $file ); };
-    ok($@, 'Test load failed - no table');
+        my $file = {
+            dbh       => $dbh,
+            dbcolumns => ['keyword','phrase','dictionary'],
+        };
 
-    $file = {
-        dbh       => $dbh,
-        dbtable   => 'phrasebook',
-    };
+        eval { $obj->load( $file ); };
+        ok($@, 'Test load failed - no table');
+    }
 
-    eval { $obj->load( $file ); };
-    ok($@, 'Test load failed - no columns');
+    {
+        my $obj = $class->new();
 
-    $file = {
-        dbtable   => 'phrasebook',
-        dbcolumns => ['keyword','phrase','dictionary'],
-    };
+        my $file = {
+            dbh       => $dbh,
+            dbtable   => 'phrasebook',
+        };
 
-    eval { $obj->load( $file ); };
-    ok($@, 'Test load failed - no handle');
+        eval { $obj->load( $file ); };
+        ok($@, 'Test load failed - no columns');
+    }
 
-    $file = {
-        dsn       => $dsn,
-        dbtable   => 'phrasebook',
-        dbcolumns => ['keyword','phrase','dictionary'],
-    };
+    {
+        my $obj = $class->new();
 
-    eval { $obj->load( $file ); };
-    ok($@, 'Test load failed - dsn with no user/password');
+        my $file = {
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase','dictionary'],
+        };
 
-    $file = {
-        dsn       => $dsn,
-        dbuser    => 'user',
-        dbtable   => 'phrasebook',
-        dbcolumns => ['keyword','phrase','dictionary'],
-    };
+        eval { $obj->load( $file ); };
+        ok($@, 'Test load failed - no handle');
+    }
 
-    eval { $obj->load( $file ); };
-    ok($@, 'Test load failed - dsn with no password');
+    {
+        my $obj = $class->new();
 
-    $file = {
-        dsn       => $dsn,
-        dbuser    => 'user',
-        dbpass    => 'pass',
-        dbtable   => 'phrasebook',
-        dbcolumns => ['keyword','phrase','dictionary'],
-    };
+        my $file = {
+            dsn       => $dsn,
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase','dictionary'],
+        };
 
-    eval { $obj->load( $file ); };
-    is($@,'','Test load passed - dsn');
+        eval { $obj->load( $file ); };
+        ok($@, 'Test load failed - dsn with no user/password');
+    }
 
-    $file = {
-        dbh       => $dbh,
-        dbtable   => 'phrasebook',
-        dbcolumns => [],
-    };
+    {
+        my $obj = $class->new();
 
-    eval { $obj->load( $file ); };
-    ok($@,'Test load failed - empty column list');
+        my $file = {
+            dsn       => $dsn,
+            dbuser    => 'user',
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase','dictionary'],
+        };
 
-    $file = {
-        dbh       => $dbh,
-        dbtable   => 'phrasebook',
-        dbcolumns => ['keyword','phrase'],
-    };
+        eval { $obj->load( $file ); };
+        ok($@, 'Test load failed - dsn with no password');
+    }
 
-    load_test($obj, 0, $file );
+    {
+        my $obj = $class->new();
 
-    $file = {
-      dbh       => $dbh,
-      dbtable   => 'phrasebook',
-      dbcolumns => ['keyword','phrase','dictionary'],
-    };
+        my $file = {
+            dsn       => $dsn,
+            dbuser    => 'user',
+            dbpass    => 'pass',
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase','dictionary'],
+        };
 
-    load_test($obj, 0, $file );
-    load_test($obj, 0, $file, 'BLAH' );
-    load_test($obj, 0, $file, $dict );
+        eval { $obj->load( $file ); };
+        is($@,'','Test load passed - dsn');
+    }
 
-    my @expected = qw(DEF ONE);
-    my @dicts = $obj->dicts();
-    is_deeply( \@dicts, \@expected, 'Checking dictionaries' );
+    {
+        my $obj = $class->new();
 
-       @expected = qw(bar foo);
-    my @keywords = $obj->keywords();
-    is_deeply( \@keywords, \@expected, 'Checking keywords' );
+        my $file = {
+            dbh       => $dbh,
+            dbtable   => 'phrasebook',
+            dbcolumns => [],
+        };
+
+        eval { $obj->load( $file ); };
+        ok($@,'Test load failed - empty column list');
+    }
+
+    {
+        my $obj = $class->new();
+
+        my $file = {
+            dbh       => $dbh,
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase'],
+        };
+
+        load_test($obj, 0, $file );
+    }
+
+    {
+        my $obj = $class->new();
+
+        my $file = {
+          dbh       => $dbh,
+          dbtable   => 'phrasebook',
+          dbcolumns => ['keyword','phrase','dictionary'],
+        };
+
+        load_test($obj, 0, $file );
+        load_test($obj, 0, $file, 'BLAH' );
+        load_test($obj, 0, $file, $dict );
+        load_test($obj, 0, $file, ['ONE','TWO','THREE'] );
+
+        my @expected = qw(DEF ONE);
+        my @dicts = $obj->dicts();
+        is_deeply( \@dicts, \@expected, 'Checking dictionaries' );
+
+           @expected = qw(bar foo);
+        my @keywords = $obj->keywords();
+        is_deeply( \@keywords, \@expected, 'Checking keywords' );
+    }
+
+    {
+        my $obj = $class->new();
+
+        my $file = {
+          dbh       => $dbh,
+          dbtable   => 'phrasebook',
+          dbcolumns => ['keyword','phrase'],
+        };
+
+        eval { $obj->load( $file ); };
+        my @expected = qw();
+        my @dicts = $obj->dicts();
+        is_deeply( \@dicts, \@expected, 'no dictionaries when no dictionary column specified' );
+    }
 }
 
 sub load_test {
-    my $obj = shift;
-    my $tof = shift;
+    my $obj  = shift;
+    my $fail = shift;   # do we expect the test to fail?
 
     eval { $obj->load( @_ ); };
-    $tof ? ok($@,  'Test load failed - not enough data')
-         : ok(!$@, 'Test load passed - valid params');
+    $fail ? ok($@,  "Test load failed - not enough data [@_]")
+          : ok(!$@, "Test load passed - valid params [@_]");
 
     my $phrase = $obj->get();
     is($phrase, undef, '.. no key no phrase');
+    $phrase = $obj->get('bogus');
+    is($phrase, undef, '.. unknown key no phrase');
     $phrase = $obj->get('foo');
     like($phrase, qr/Welcome to/, '.. a welcome phrase');
 }

@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 =head1 NAME
 
@@ -111,9 +111,11 @@ sub load
 {
     my ($self, $file, $dict) = @_;
 
-	$self->{file} = $file;
-	$self->{dict} = $dict;
+	$self->{file} = $file   if($file);
+	$self->{dict} = $dict   if($dict);
 
+	croak "Phrasebook file definition missing"
+		unless($self->{file});
 	croak "Phrasebook table name missing"
 		unless($self->{file}{dbtable});
 	croak "Phrasebook column names missing"
@@ -144,39 +146,32 @@ Returns the phrase stored in the phrasebook, for a given keyword.
 
 sub get {
     my ($self,$key) = @_;
-    my $dict_set = 0;
+    my (@dicts,$sth,@row);
+
+    return  unless($key);
 
 	my $sql =
 			'SELECT '.$self->{file}{dbcolumns}[1].
 			' FROM  '.$self->{file}{dbtable}.
 			' WHERE '.$self->{file}{dbcolumns}[0].'=?';
 
-	if($self->{file}{dbcolumns}[2]) {
-        if($self->{dict}) {
-	        $sql .= ' AND   '.$self->{file}{dbcolumns}[2].'=?';
-            $dict_set = 1;
-        } else {
-	        $sql .= ' ORDER BY '.$self->{file}{dbcolumns}[2];
+    if($self->{file}{dbcolumns}[2] && $self->{dict}) {
+        push @dicts, ref($self->{dict}) eq 'ARRAY' ? @{$self->{dict}} : $self->{dict}; 
+        my $query = $sql . ' AND   '.$self->{file}{dbcolumns}[2].'=?';
+        $sth = $self->{dbh}->prepare($sql);
+
+        for my $dict (@dicts) {
+            $sth->execute($key,$dict);
+            @row = $sth->fetchrow_array;
+            $sth->finish;
+
+        	return $row[0]  if(@row);
         }
     }
 
-	my $sth = $self->{dbh}->prepare($sql);
-	if($dict_set)   { $sth->execute($key,$self->{dict}); }
-    else            { $sth->execute($key); }
-	my @row = $sth->fetchrow_array;
-	$sth->finish;
-
-	return $row[0]  if(@row);
-    return          unless($dict_set);
-
-	$sql =	'SELECT '.$self->{file}{dbcolumns}[1].
-			' FROM  '.$self->{file}{dbtable}.
-			' WHERE '.$self->{file}{dbcolumns}[0].'=?'.
-	        ' ORDER BY '.$self->{file}{dbcolumns}[2];
-
+    # not in a named dictionary, or no dictionary specified
 	$sth = $self->{dbh}->prepare($sql);
-	if($dict_set)   { $sth->execute($key,$self->{dict}); }
-    else            { $sth->execute($key); }
+	$sth->execute($key);
 	@row = $sth->fetchrow_array;
 	$sth->finish;
 
@@ -221,28 +216,20 @@ sub keywords {
     my $self = shift;
     my $dict_set = 0;
 
+    # note that we don't need to worry about dictionaries as the default 
+    # is to search all available dictionaries
+
 	my $sql =
 			'SELECT '.$self->{file}{dbcolumns}[0].
 			' FROM  '.$self->{file}{dbtable};
 
-	if($self->{file}{dbcolumns}[2]) {
-        if($self->{dict}) {
-	        $sql .= ' WHERE '.$self->{file}{dbcolumns}[2].'=?';
-            $dict_set = 1;
-        } else {
-	        $sql .= ' ORDER BY '.$self->{file}{dbcolumns}[2];
-        }
-    }
-
 	my $sth = $self->{dbh}->prepare($sql);
-	if($dict_set)   { $sth->execute($self->{dict}); }
-    else            { $sth->execute(); }
+    $sth->execute();
 	my $rows = $sth->fetchall_arrayref;
 	$sth->finish;
 
     my @keywords;
     push @keywords, $_->[0]   for(@$rows);
-    return ()   unless(@keywords);
 	return sort @keywords;
 }
 
@@ -291,7 +278,7 @@ be forthcoming, please feel free to (politely) remind me.
   This module is free software; you can redistribute it and/or 
   modify it under the same terms as Perl itself.
 
-The full text of the licences can be found in the F<Artistic> and
+The full text of the licenses can be found in the F<Artistic> and
 F<COPYING> files included with this module, or in L<perlartistic> and
 L<perlgpl> in Perl 5.8.1 or later.
 
