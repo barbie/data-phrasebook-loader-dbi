@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 =head1 NAME
 
