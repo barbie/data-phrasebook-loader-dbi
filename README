@@ -3,7 +3,7 @@ Data::Phrasebook::Loader::DBI
 
 DESCRIPTION
 
-    Abstract your queries ... with a database!
+  Abstract your queries ... with a database!
 
 This distribution enables the framework for abstracting common or locale data
 out of your code into a datastore. The default is within a plain text file,

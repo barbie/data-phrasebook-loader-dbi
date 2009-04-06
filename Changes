@@ -1,5 +1,9 @@
 # Changes log for Data::Phrasebook::Loader::DBI
 
+0.03	03/03/2005
+	- POD updates.
+	- 01load.t test fixes
+
 0.02    24 Feb 2005
         - revamped and renamed as part of the Data::Phrasebook framework
 

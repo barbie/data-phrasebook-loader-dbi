@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 NAME
 
@@ -18,29 +18,29 @@ Data::Phrasebook::Loader::DBI - Absract your phrases with a DBI driver.
     my $q = Data::Phrasebook->new(
         class     => 'Fnerk',
         loader    => 'DBI',
-		file      => {
-            dsn	      => 'dbi:mysql:database=test',
+        file      => {
+            dsn       => 'dbi:mysql:database=test',
             dbuser    => 'user',
             dbpass    => 'pass',
-		    dbtable   => 'phrasebook',
-		    dbcolumns => ['keyword','phrase','dictionary'],
-		}
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase','dictionary'],
+        }
     );
 
-	OR
+    OR
 
     my $q = Data::Phrasebook->new(
         class     => 'Fnerk',
         loader    => 'DBI',
-		file      => {
-            dbh	      => $dbh,
-		    dbtable   => 'phrasebook',
-		    dbcolumns => ['keyword','phrase','dictionary'],
-		}
+        file      => {
+            dbh       => $dbh,
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase','dictionary'],
+        }
     );
 
-   $q->delimiters( qr{ \[% \s* (\w+) \s* %\] }x );
-	my $phrase = $q->fetch($keyword);
+    $q->delimiters( qr{ \[% \s* (\w+) \s* %\] }x );
+    my $phrase = $q->fetch($keyword);
 
 =head1 ABSTRACT
 
@@ -75,6 +75,26 @@ for consistency, the connection string and other database specific settings,
 are passed via a hashref.
 
    $loader->load( $file );
+
+The hashref can be either:
+
+   my $file => {
+            dsn       => 'dbi:mysql:database=test',
+            dbuser    => 'user',
+            dbpass    => 'pass',
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase','dictionary'],
+   };
+
+which will create a connection to the specified database. Or:
+
+   my $file => {
+            dbh       => $dbh,
+            dbtable   => 'phrasebook',
+            dbcolumns => ['keyword','phrase','dictionary'],
+   };
+
+which will reuse and already established connection.
 
 This method is used internally by L<Data::Phrasebook::Generic>'s
 C<data> method, to initialise the data store.
@@ -147,25 +167,33 @@ __END__
 
 =head1 SEE ALSO
 
-L<Data::Phrasebook>
+L<Data::Phrasebook>.
+
+=head1 BUGS, PATCHES & FIXES
+
+There are no known bugs at the time of this release. However, if you spot a
+bug or are experiencing difficulties, that is not explained within the POD
+documentation, please send an email to barbie@cpan.org or submit a bug to the
+RT system (http://rt.cpan.org/). However, it would help greatly if you are 
+able to pinpoint problems or even supply a patch. 
+
+Fixes are dependant upon their severity and my availablity. Should a fix not
+be forthcoming, please feel free to (politely) remind me.
 
 =head1 AUTHOR
 
-Barbie, C< <<barbie@cpan.org>> >
-for Miss Barbell Productions, L<http://www.missbarbell.co.uk>
+  Barbie, <barbie@cpan.org>
+  for Miss Barbell Productions <http://www.missbarbell.co.uk>.
 
-Birmingham Perl Mongers, L<http://birmingham.pm.org/>
+=head1 LICENCE AND COPYRIGHT
 
-=head1 COPYRIGHT AND LICENSE
+  Copyright (C) 2004-2005 Barbie for Miss Barbell Productions.
 
-  Copyright (C) 2004-2005 Barbie for Miss Barbell Productions
-  All Rights Reserved.
+  This library is free software; you can redistribute it and/or modify
+  it under the same terms as Perl itself.
 
-  This module is free software; you can redistribute it and/or 
-  modify it under the same terms as Perl itself.
-
-  The full text of the licences can be found in the F<Artistic> and
-  F<COPYING> files included with this module, or in L<perlartistic> and
-  L<perlgpl> in Perl 5.8.1 or later.
+The full text of the licences can be found in the F<Artistic> and
+F<COPYING> files included with this module, or in L<perlartistic> and
+L<perlgpl> in Perl 5.8.1 or later.
 
 =cut
