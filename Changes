@@ -1,5 +1,10 @@
 # Changes log for Data::Phrasebook::Loader::DBI
 
+0.04	25/03/2005
+	- Added DSLIP information
+	- Rewrote tests scripts
+	- Devel::Cover - 97.3%
+
 0.03	03/03/2005
 	- POD updates.
 	- 01load.t test fixes

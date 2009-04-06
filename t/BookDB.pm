@@ -22,38 +22,8 @@ sub new
 
 use Data::Dumper;
 
-my @miles1 = (
-	['book1', 'Lawrence Miles'],
-	['book2', 'Lawrence Miles'],
-	['book3', 'Lawrence Miles'],
-	['book4', 'Lawrence Miles'],
-	['book5', 'Lawrence Miles'],
-	['book6', 'Lawrence Miles'],
-	['book7', 'Lawrence Miles']);
-my @miles2 = (
-	{title=>'book1', author=>'Lawrence Miles'},
-	{title=>'book2', author=>'Lawrence Miles'},
-	{title=>'book3', author=>'Lawrence Miles'},
-	{title=>'book4', author=>'Lawrence Miles'},
-	{title=>'book5', author=>'Lawrence Miles'},
-	{title=>'book6', author=>'Lawrence Miles'},
-	{title=>'book7', author=>'Lawrence Miles'});
-my @miles3 = (
-	7,
-);
-my @lance = (
-	{title=>'book1', author=>'Lance Parkin'},
-	{title=>'book2', author=>'Lance Parkin'},
-	{title=>'book3', author=>'Lance Parkin'},
-	{title=>'book4', author=>'Lance Parkin'},
-	{title=>'book5', author=>'Lance Parkin'},
-	{title=>'book6', author=>'Lance Parkin'},
-	{title=>'book7', author=>'Lance Parkin'});
-my @magrs = (
-	{title=>'book1', author=>'Paul Magrs'},
-	{title=>'book2', author=>'Paul Magrs'},
-	{title=>'book3', author=>'Paul Magrs'});
-
+my @sql = (
+	['foo','Welcome To My World']);
 
 sub prepare { 
 	shift; #print STDERR "\n#prepare=".Dumper(\@_);
@@ -93,47 +63,11 @@ sub execute {
 		if($arg && $arg =~ /foo/) {
 		$dbh->{array} = ['Welcome to [% my %] world. It is a nice [% place %].'];
 		}
-		if($arg && $arg =~ /bar/) {
-		$dbh->{array} = ['Welcome to :my world. It is a nice :place.'];
-		}
-		if($arg && $arg =~ /count_author/) {
-		$dbh->{array} = ['select count(1) from books where author = :author'];
-		}
-		if($arg && $arg =~ /find_author/) {
-		$dbh->{array} = ['select title,author from books where author = :author'];
-		}
 	}
 
-	elsif($query =~ /select title,author from books where author/) {
-		if($arg && $arg =~ /Lawrence Miles/) {
-			my @list = @miles2;
-			$dbh->{hash} = \@list;
-			$dbh->{array} = \@miles1;
-		}
-		if($arg && $arg =~ /Lance Parkin/) {
-			$dbh->{hash} = \@lance;
-		}
-		if($arg && $arg =~ /Paul Magrs/) {
-			$dbh->{hash} = \@magrs;
-		}
-	}
-
-	elsif($query =~ /select count\(1\) from books where author/) {
-		$dbh->{array} = [(scalar @miles1)]	if($arg && $arg =~ /Lawrence Miles/);
-		$dbh->{array} = [(scalar @lance)]	if($arg && $arg =~ /Lance Parkin/);
-		$dbh->{array} = [(scalar @magrs)]	if($arg && $arg =~ /Paul Magrs/);
-	}
-
-	elsif($query =~ /select class,title,author from books where author/) {
-		if($arg && $arg =~ /Lance Parkin/) {
-			$dbh->{hash} = \@lance;
-		}
-		if($arg && $arg =~ /Paul Magrs/) {
-			$dbh->{hash} = \@magrs;
-		}
-		if($arg && $arg =~ /Lawrence Miles/) {
-			my @list = @miles2;
-			$dbh->{hash} = \@list;
+	elsif($query =~ /SELECT phrase FROM  phrasebook WHERE keyword=\?/) {
+		if($arg && $arg =~ /foo/) {
+		$dbh->{array} = ['Welcome to [% my %] world. It is a nice [% place %].'];
 		}
 	}
 }

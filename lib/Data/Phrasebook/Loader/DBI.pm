@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 NAME
 
@@ -111,7 +111,8 @@ sub load
 	croak "Phrasebook table name missing"
 		unless($self->{file}{dbtable});
 	croak "Phrasebook column names missing"
-		unless($self->{file}{dbcolumns} && $self->{file}{dbcolumns} >= 2);
+		unless($self->{file}{dbcolumns} && 
+		       scalar(@{$self->{file}{dbcolumns}}) >= 2);
 
 	$self->{dbh} = $self->{file}{dbh}	if(defined $self->{file}{dbh});
 
@@ -179,6 +180,14 @@ able to pinpoint problems or even supply a patch.
 
 Fixes are dependant upon their severity and my availablity. Should a fix not
 be forthcoming, please feel free to (politely) remind me.
+
+=head1 DSLIP
+
+  b - Beta testing
+  d - Developer
+  p - Perl-only
+  O - Object oriented
+  p - Standard-Perl: user may choose between GPL and Artistic
 
 =head1 AUTHOR
 

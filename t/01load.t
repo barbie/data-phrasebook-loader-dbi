@@ -3,12 +3,17 @@ use strict;
 use lib 't';
 use BookDB;
 
-use Test::More tests => 7;
+use Test::More tests => 21;
 
 # ------------------------------------------------------------------------
 
-my $class = 'Data::Phrasebook';
-use_ok $class;
+my $class = 'Data::Phrasebook::Loader::DBI';
+use_ok($class);
+
+my $dbh = BookDB->new();
+my $dsn = 'dbi:Mock:database=test';
+my $dict = 'BASE';
+
 
 my ($mock,$nomock);
 
@@ -43,62 +48,119 @@ BEGIN {
 	}
 }
 	
-my %file = (
-	dsn	      => 'dbi:Mock:database=test',
-	dbuser    => 'user',
-	dbpass    => 'pass',
-    dbtable   => 'phrasebook',
-    dbcolumns => ['keyword','phrase','dictionary'],
-);
-
-my $dict = 'base';
-
 # ------------------------------------------------------------------------
 
 SKIP: {
-	skip "Test::MockObject required for testing", 2 if $nomock;
+	skip "Test::MockObject required for testing", 16 if $nomock;
 
-    my $obj = $class->new(
-        loader    => 'DBI',
-		file      => \%file,
-	);
-    isa_ok( $obj => $class.'::Plain', "Bare new" );
-    $obj->dict( $dict );
-    is( $obj->dict() => $dict , "Set/get dict works");
-}
+    my $obj = $class->new();
+    isa_ok($obj, $class);
 
-SKIP: {
-	skip "Test::MockObject required for testing", 4 if $nomock;
+	my $file = {
+		dbh       => $dbh,
+		dbcolumns => ['keyword','phrase','dictionary'],
+        };
 
-    my $obj = $class->new(
-		dict      => $dict,
+    eval { $obj->load( $file ); };
+    ok($@);
 
-        loader    => 'DBI',
-		file      => \%file,
-	);
-    isa_ok( $obj => $class.'::Plain', "New with dict" );
-    is( $obj->dict() => $dict , "Get dict works");
+	$file = {
+		dbh       => $dbh,
+		dbtable   => 'phrasebook',
+        };
 
-    {
-        my $str = $obj->fetch( 'foo', {
-                my => "Iain's",
-                place => 'locale',
-            });
+    eval { $obj->load( $file ); };
+    ok($@);
 
-        is ($str, "Welcome to Iain's world. It is a nice locale.",
-            "Fetch matches" );
-    }
+	$file = {
+		dbtable   => 'phrasebook',
+		dbcolumns => ['keyword','phrase','dictionary'],
+        };
 
-    {
-        $obj->delimiters( qr{ :(\w+) }x );
+    eval { $obj->load( $file ); };
+    ok($@);
 
-        my $str = $obj->fetch( 'bar', {
-                my => "Bob's",
-                place => 'whatever',
-            });
+	$file = {
+		dsn       => $dsn,
+		dbtable   => 'phrasebook',
+		dbcolumns => ['keyword','phrase','dictionary'],
+        };
 
-        is ($str, "Welcome to Bob's world. It is a nice whatever.",
-            "Fetch matches" );
-    }
+    eval { $obj->load( $file ); };
+    ok($@);
+
+	$file = {
+		dsn       => $dsn,
+		dbuser    => 'user',
+		dbtable   => 'phrasebook',
+		dbcolumns => ['keyword','phrase','dictionary'],
+        };
+
+    eval { $obj->load( $file ); };
+    ok($@);
+
+	$file = {
+		dsn       => $dsn,
+		dbuser    => 'user',
+		dbpass    => 'pass',
+		dbtable   => 'phrasebook',
+		dbcolumns => ['keyword','phrase','dictionary'],
+        };
+
+    eval { $obj->load( $file ); };
+    is($@,'');
+
+	$file = {
+               	dbh       => $dbh,
+		dbtable   => 'phrasebook',
+		dbcolumns => [],
+        };
+
+    eval { $obj->load( $file ); };
+    ok($@);
+
+	$file = {
+               	dbh       => $dbh,
+		dbtable   => 'phrasebook',
+		dbcolumns => ['keyword','phrase'],
+        };
+
+    eval { $obj->load( $file ); };
+    ok(!$@);
+
+	my $phrase = $obj->get();
+	is($phrase, undef);
+	$phrase = $obj->get('foo');
+	like($phrase, qr/Welcome to/);
+
+	$file = {
+               	dbh       => $dbh,
+		dbtable   => 'phrasebook',
+		dbcolumns => ['keyword','phrase','dictonary'],
+        };
+
+    eval { $obj->load( $file ); };
+    ok(!$@);
+
+	$phrase = $obj->get();
+	is($phrase, undef);
+	$phrase = $obj->get('foo');
+	like($phrase, qr/Welcome to/);
+
+    eval { $obj->load( $file, 'BLAH' ); };
+    ok(!$@);
+
+	$phrase = $obj->get();
+	is($phrase, undef);
+	$phrase = $obj->get('foo');
+	like($phrase, qr/Welcome to/);
+
+    eval { $obj->load( $file, $dict ); };
+    ok(!$@);
+
+	$phrase = $obj->get();
+	is($phrase, undef);
+	$phrase = $obj->get('foo');
+	like($phrase, qr/Welcome to/);
 }
 
