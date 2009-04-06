@@ -1,13 +1,31 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
+--- #YAML:1.0
 name:         Data-Phrasebook-Loader-DBI
-version:      0.08
-version_from: lib/Data/Phrasebook/Loader/DBI.pm
+version:      0.09
+abstract:     This module provides a loader class for phrasebook implementations using DBI.
+author:
+  - Barbie <barbie@cpan.org>
+license: gpl
+distribution_type: module
 installdirs:  site
 requires:
-    Data::Phrasebook:              0.24
-    DBI:                           1.38
-    Test::More:                    0.47
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.17
+    Data::Phrasebook:		0.24
+    DBI:			1.38
+    Test::More:                 0.47
+recommends:
+    Test::More:                 0.47
+    Test::Pod:			1.00
+    Test::Pod::Coverage:	0.08
+build_requires:
+    Test::More:			0.47
+provides:
+  Data::Phrasebook::Loader::YAML:
+    file: lib/Data/Phrasebook/Loader/DBI.pm
+    version: 0.09
+no_index:
+  directory:
+  - ./t
+  - ./examples
+meta-spec:
+   version: 1.3
+   url: http://module-build.sourceforge.net/META-spec-v1.3.html
+generated_by: Hand 1.0

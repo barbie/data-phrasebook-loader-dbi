@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 =head1 NAME
 
@@ -167,7 +167,7 @@ sub get {
 	$sth->finish;
 
 	return $row[0]  if(@row);
-    return undef    unless($dict_set);
+    return          unless($dict_set);
 
 	$sql =	'SELECT '.$self->{file}{dbcolumns}[1].
 			' FROM  '.$self->{file}{dbtable}.
@@ -181,7 +181,7 @@ sub get {
 	$sth->finish;
 
 	return $row[0]  if(@row);
-    return undef;
+    return;
 }
 
 =head2 dicts
@@ -283,12 +283,13 @@ be forthcoming, please feel free to (politely) remind me.
   Barbie, <barbie@cpan.org>
   for Miss Barbell Productions <http://www.missbarbell.co.uk>.
 
-=head1 LICENCE AND COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-  Copyright (C) 2004-2005 Barbie for Miss Barbell Productions.
+  Copyright (C) 2004-2007 Barbie for Miss Barbell Productions.
+  All Rights Reserved.
 
-  This library is free software; you can redistribute it and/or modify
-  it under the same terms as Perl itself.
+  This module is free software; you can redistribute it and/or 
+  modify it under the same terms as Perl itself.
 
 The full text of the licences can be found in the F<Artistic> and
 F<COPYING> files included with this module, or in L<perlartistic> and
