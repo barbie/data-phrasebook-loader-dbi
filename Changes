@@ -1,5 +1,11 @@
 # Changes log for Data::Phrasebook::Loader::DBI
 
+0.13	current
+	- removed 5.006 dependency.
+
+0.12	01/03/2007
+	- Added META.yml testing
+
 0.11	01/03/2007
 	- Fixed load testing bug that's been hanging a round for a while. 
 	- Added Test::MockObject to list of recommends in META.yml.
