@@ -1,0 +1,7 @@
+# Changes log for Data::Phrasebook::Loader::DBI
+
+0.02    24 Feb 2005
+        - revamped and renamed as part of the Data::Phrasebook framework
+
+0.01    31 Jan 2004
+        - Extracted from main Phrasebook distribution
