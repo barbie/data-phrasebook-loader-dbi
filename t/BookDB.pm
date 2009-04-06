@@ -56,7 +56,7 @@ sub execute {
 	$oldq = $query;
 	return	unless($query);
 
-#print STDERR "\n# query=[$query]";
+#print STDERR "\n# query=[$query]\n";
 #print STDERR "\n# arg=[$arg]\n";
 
 	if($query =~ /SELECT phrase FROM  phrasebook WHERE keyword=\? AND   dictionary=\?/) {
@@ -69,6 +69,10 @@ sub execute {
 		if($arg && $arg =~ /foo/) {
 		$dbh->{array} = ['Welcome to [% my %] world. It is a nice [% place %].'];
 		}
+	}
+
+    elsif($query =~ /SELECT dictonary FROM  phrasebook/) {
+		$dbh->{array} = [['DEF'],['ONE']];
 	}
 }
 sub fetchrow_hashref {

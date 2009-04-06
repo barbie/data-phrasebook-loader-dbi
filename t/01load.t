@@ -3,7 +3,7 @@ use strict;
 use lib 't';
 use BookDB;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 # ------------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ SKIP: {
 	my $file = {
 		dbh       => $dbh,
 		dbcolumns => ['keyword','phrase','dictionary'],
-        };
+	};
 
     eval { $obj->load( $file ); };
     ok($@);
@@ -67,7 +67,7 @@ SKIP: {
 	$file = {
 		dbh       => $dbh,
 		dbtable   => 'phrasebook',
-        };
+	};
 
     eval { $obj->load( $file ); };
     ok($@);
@@ -75,7 +75,7 @@ SKIP: {
 	$file = {
 		dbtable   => 'phrasebook',
 		dbcolumns => ['keyword','phrase','dictionary'],
-        };
+	};
 
     eval { $obj->load( $file ); };
     ok($@);
@@ -84,7 +84,7 @@ SKIP: {
 		dsn       => $dsn,
 		dbtable   => 'phrasebook',
 		dbcolumns => ['keyword','phrase','dictionary'],
-        };
+	};
 
     eval { $obj->load( $file ); };
     ok($@);
@@ -94,7 +94,7 @@ SKIP: {
 		dbuser    => 'user',
 		dbtable   => 'phrasebook',
 		dbcolumns => ['keyword','phrase','dictionary'],
-        };
+	};
 
     eval { $obj->load( $file ); };
     ok($@);
@@ -105,62 +105,52 @@ SKIP: {
 		dbpass    => 'pass',
 		dbtable   => 'phrasebook',
 		dbcolumns => ['keyword','phrase','dictionary'],
-        };
+	};
 
     eval { $obj->load( $file ); };
     is($@,'');
 
 	$file = {
-               	dbh       => $dbh,
+       	dbh       => $dbh,
 		dbtable   => 'phrasebook',
 		dbcolumns => [],
-        };
+	};
 
     eval { $obj->load( $file ); };
     ok($@);
 
 	$file = {
-               	dbh       => $dbh,
+        dbh       => $dbh,
 		dbtable   => 'phrasebook',
 		dbcolumns => ['keyword','phrase'],
-        };
+    };
 
-    eval { $obj->load( $file ); };
-    ok(!$@);
+    load_test($obj, 0, $file );
+
+	$file = {
+		dbh       => $dbh,
+		dbtable   => 'phrasebook',
+		dbcolumns => ['keyword','phrase','dictonary'],
+	};
+
+    load_test($obj, 0, $file );
+    load_test($obj, 0, $file, 'BLAH' );
+    load_test($obj, 0, $file, $dict );
+
+    my @expected = qw(DEF ONE);
+    my @dicts = $obj->dicts();
+    is_deeply( \@dicts, \@expected );
+}
+
+sub load_test {
+	my $obj = shift;
+	my $tof = shift;
+
+    eval { $obj->load( @_ ); };
+    $tof ? ok($@) : ok(!$@);
 
 	my $phrase = $obj->get();
 	is($phrase, undef);
 	$phrase = $obj->get('foo');
 	like($phrase, qr/Welcome to/);
-
-	$file = {
-               	dbh       => $dbh,
-		dbtable   => 'phrasebook',
-		dbcolumns => ['keyword','phrase','dictonary'],
-        };
-
-    eval { $obj->load( $file ); };
-    ok(!$@);
-
-	$phrase = $obj->get();
-	is($phrase, undef);
-	$phrase = $obj->get('foo');
-	like($phrase, qr/Welcome to/);
-
-    eval { $obj->load( $file, 'BLAH' ); };
-    ok(!$@);
-
-	$phrase = $obj->get();
-	is($phrase, undef);
-	$phrase = $obj->get('foo');
-	like($phrase, qr/Welcome to/);
-
-    eval { $obj->load( $file, $dict ); };
-    ok(!$@);
-
-	$phrase = $obj->get();
-	is($phrase, undef);
-	$phrase = $obj->get('foo');
-	like($phrase, qr/Welcome to/);
 }
-

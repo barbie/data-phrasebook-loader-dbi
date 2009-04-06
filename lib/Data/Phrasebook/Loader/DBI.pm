@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 NAME
 
@@ -155,6 +155,31 @@ sub get {
 	my @row = $sth->fetchrow_array;
 	$sth->finish;
 	return $row[0];
+}
+
+=head2 dicts
+
+Returns the list of dictionaries available.
+
+   my @dicts = $loader->dicts();
+
+=cut
+
+sub dicts {
+    my $self = shift;
+
+	return ()	unless($self->{file}{dbcolumns}[2]);
+
+	my $sql =
+			'SELECT '.$self->{file}{dbcolumns}[2].
+			' FROM  '.$self->{file}{dbtable};
+
+	my $sth = $self->{dbh}->prepare($sql);
+	$sth->execute;
+	my $row = $sth->fetchall_arrayref;
+	$sth->finish;
+
+	return map {$_->[0]} @$row;
 }
 
 sub DESTROY {

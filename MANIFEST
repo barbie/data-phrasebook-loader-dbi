@@ -9,6 +9,7 @@ MANIFEST
 MANIFEST.SKIP
 META.yml
 README
+t/00basic.t
 t/01load.t
 t/90podtest.t
 t/91podcover.t
