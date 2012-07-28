@@ -1,31 +1,32 @@
 --- #YAML:1.0
-name:                   Data-Phrasebook-Loader-DBI
-version:                0.12
-abstract:               This module provides a loader class for phrasebook implementations using DBI.
+name:                     Data-Phrasebook-Loader-DBI
+version:                  0.13
+abstract:                 Loader class for phrasebook implementations using DBI
 author:
   - Barbie <barbie@cpan.org>
 
-license:                gpl
-distribution_type:      module
-installdirs:            site
+license:                  artistic_2
+distribution_type:        module
+installdirs:              site
 
 requires:
-  Data::Phrasebook:     0.24
-  DBI:                  1.38
-  Test::More:           0.47
+  perl:                   5.006
+  Data::Phrasebook:       0.24
+  DBI:                    1.38
 recommends:
-  Test::More:           0.47
-  Test::Pod:            1.00
-  Test::Pod::Coverage:  0.08
-  Test::MockObject:     0
-  Test::YAML::Meta:     0
+  Test::CPAN::Meta:       0
+  Test::CPAN::Meta::JSON: 0
+  Test::MockObject:       0
+  Test::Pod:              1.00
+  Test::Pod::Coverage:    0.08
 build_requires:
-  Test::More:           0.47
+  IO::File:               0
+  Test::More:             0.70
 
 provides:
   Data::Phrasebook::Loader::DBI:
     file:     lib/Data/Phrasebook/Loader/DBI.pm
-    version:  0.12
+    version:  0.13
 no_index:
   directory:
     - t

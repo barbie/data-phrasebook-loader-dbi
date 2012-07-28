@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-my $VERSION = '0.13';
+our $VERSION = '0.13';
 
 =head1 NAME
 
@@ -41,10 +41,6 @@ Data::Phrasebook::Loader::DBI - Absract your phrases with a DBI driver.
 
     $q->delimiters( qr{ \[% \s* (\w+) \s* %\] }x );
     my $phrase = $q->fetch($keyword);
-
-=head1 ABSTRACT
-
-This module provides a loader class for phrasebook implementations using DBI.
 
 =head1 DESCRIPTION
 
@@ -254,16 +250,8 @@ documentation, please send an email to barbie@cpan.org or submit a bug to the
 RT system (http://rt.cpan.org/). However, it would help greatly if you are
 able to pinpoint problems or even supply a patch.
 
-Fixes are dependant upon their severity and my availablity. Should a fix not
+Fixes are dependent upon their severity and my availability. Should a fix not
 be forthcoming, please feel free to (politely) remind me.
-
-=head1 DSLIP
-
-  b - Beta testing
-  d - Developer
-  p - Perl-only
-  O - Object oriented
-  p - Standard-Perl: user may choose between GPL and Artistic
 
 =head1 AUTHOR
 
@@ -272,13 +260,9 @@ be forthcoming, please feel free to (politely) remind me.
 
 =head1 COPYRIGHT AND LICENSE
 
-  Copyright (C) 2004-2007 Barbie for Miss Barbell Productions.
+  Copyright (C) 2004-2012 Barbie for Miss Barbell Productions.
 
   This module is free software; you can redistribute it and/or
-  modify it under the same terms as Perl itself.
-
-The full text of the licenses can be found in the F<Artistic> and
-F<COPYING> files included with this module, or in L<perlartistic> and
-L<perlgpl> in Perl 5.8.1 or later.
+  modify it under the Artistic License 2.0.
 
 =cut

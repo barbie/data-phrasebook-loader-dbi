@@ -1,15 +1,26 @@
-use ExtUtils::MakeMaker;
-WriteMakefile(
-    NAME            => 'Data::Phrasebook::Loader::DBI',
-    VERSION_FROM    => 'lib/Data/Phrasebook/Loader/DBI.pm',
-    PREREQ_PM       => {
-        'Data::Phrasebook' => '0.24',
-        'DBI'              => '1.38',
-        'Test::More'       => '0.47',
-    },
-	NO_META			=> 1,
+#!/usr/bin/perl
 
-    ($] >= 5.005 ?
-        (ABSTRACT_FROM => 'lib/Data/Phrasebook/Loader/DBI.pm',
-         AUTHOR        => 'Barbie <barbie@cpan.org>') : ()),
+use strict;
+use warnings;
+use 5.006;
+
+use ExtUtils::MakeMaker;
+
+WriteMakefile(
+    AUTHOR              => 'Barbie <barbie@cpan.org>',
+    NAME                => 'Data::Phrasebook::Loader::DBI',
+    VERSION_FROM        => 'lib/Data/Phrasebook/Loader/DBI.pm',
+    ABSTRACT            => 'Loader class for phrasebook implementations using DBI',
+    NO_META             => 1,
+    PREREQ_PM           => {
+
+        # runtime prereqs
+        'Data::Phrasebook'      => '0.24',
+        'DBI'                   => '1.38',
+
+        # build/test prereqs
+        'Test::More'            => '0.70',
+        'IO::File'              => '0'
+
+    }
 );
