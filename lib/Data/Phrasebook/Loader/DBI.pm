@@ -5,7 +5,7 @@ use base qw( Data::Phrasebook::Loader::Base Data::Phrasebook::Debug );
 use Carp qw( croak );
 use DBI;
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 =head1 NAME
 
@@ -224,9 +224,8 @@ sub keywords {
 	my $rows = $sth->fetchall_arrayref;
 	$sth->finish;
 
-    my @keywords;
-    push @keywords, $_->[0]   for(@$rows);
-	return sort @keywords;
+    my @keywords = sort map {$_->[0]} @$rows;
+	return @keywords;
 }
 
 sub DESTROY {

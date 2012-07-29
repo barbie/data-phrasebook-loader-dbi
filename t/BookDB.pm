@@ -1,11 +1,13 @@
 package BookDB;
 
+use warnings;
+use strict;
+
 my $dbh;
 my @bind;
 my $oldq = '';
 
-sub new
-{
+sub new {
 	my $self = shift;
 
 	# create an attributes hash

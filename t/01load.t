@@ -14,7 +14,6 @@ my $dbh = BookDB->new();
 my $dsn = 'dbi:Mock:database=test';
 my $dict = 'BASE';
 
-
 my ($mock,$nomock);
 
 BEGIN {
@@ -23,31 +22,32 @@ BEGIN {
 
     if(!$nomock) {
         $mock = Test::MockObject->new();
-        $mock->fake_module( 'DBI', 
-                    'connect' =>\&BookDB::connect,
-                    'prepare' =>\&BookDB::prepare,
-                    'prepare_cached' =>\&BookDB::prepare_cached,
-                    'rebind' =>\&BookDB::rebind,
-                    'bind_param' =>\&BookDB::bind_param,
-                    'execute' =>\&BookDB::execute,
-                    'fetchrow_hashref' =>\&BookDB::fetchrow_hashref,
-                    'fetchall_arrayref' =>\&BookDB::fetchall_arrayref,
-                    'fetchrow_array' =>\&BookDB::fetchrow_array,
-                    'finish' =>\&BookDB::finish);
+        $mock->fake_module( 'DBI',
+                    'connect'           => \&BookDB::connect,
+                    'prepare'           => \&BookDB::prepare,
+                    'prepare_cached'    => \&BookDB::prepare_cached,
+                    'rebind'            => \&BookDB::rebind,
+                    'bind_param'        => \&BookDB::bind_param,
+                    'execute'           => \&BookDB::execute,
+                    'fetchrow_hashref'  => \&BookDB::fetchrow_hashref,
+                    'fetchall_arrayref' => \&BookDB::fetchall_arrayref,
+                    'fetchrow_array'    => \&BookDB::fetchrow_array,
+                    'finish'            => \&BookDB::finish
+        );
         $mock->fake_new( 'DBI' );
-        $mock->mock( 'connect', \&BookDB::connect );
-        $mock->mock( 'prepare', \&BookDB::prepare );
-        $mock->mock( 'prepare_cached', \&BookDB::prepare_cached );
-        $mock->mock( 'rebind', \&BookDB::rebind );
-        $mock->mock( 'bind_param', \&BookDB::bind_param );
-        $mock->mock( 'execute', \&BookDB::execute );
-        $mock->mock( 'fetchrow_hashref', \&BookDB::fetchrow_hashref );
-        $mock->mock( 'fetchall_arrayref', \&BookDB::fetchall_arrayref );
-        $mock->mock( 'fetchrow_array', \&BookDB::fetchrow_array );
-        $mock->mock( 'finish', \&BookDB::finish );
+        $mock->mock( 'connect',             \&BookDB::connect );
+        $mock->mock( 'prepare',             \&BookDB::prepare );
+        $mock->mock( 'prepare_cached',      \&BookDB::prepare_cached );
+        $mock->mock( 'rebind',              \&BookDB::rebind );
+        $mock->mock( 'bind_param',          \&BookDB::bind_param );
+        $mock->mock( 'execute',             \&BookDB::execute );
+        $mock->mock( 'fetchrow_hashref',    \&BookDB::fetchrow_hashref );
+        $mock->mock( 'fetchall_arrayref',   \&BookDB::fetchall_arrayref );
+        $mock->mock( 'fetchrow_array',      \&BookDB::fetchrow_array );
+        $mock->mock( 'finish',              \&BookDB::finish );
     }
 }
-    
+
 # ------------------------------------------------------------------------
 
 SKIP: {

@@ -1,8 +1,12 @@
 # Changes log for Data::Phrasebook::Loader::DBI
 
+0.14	29/07/2012
+	- added Carp as a prerequisite.
+	- implemented Perl::Critic suggestions.
+
 0.13    28/07/2012
         - removed License files from distro.
-	- Artistic License v2 now sole license.
+        - Artistic License v2 now sole license.
         - removed DSLIP info.
         - spelling fix. (thanks to Florian Schlichting & Gregor Herrmann).
         - added minimum perl version (5.006).
