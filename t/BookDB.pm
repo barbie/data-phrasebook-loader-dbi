@@ -88,13 +88,11 @@ sub fetchall_arrayref   { return $dbh->{array} ? \@{$dbh->{array}}      : undef 
 sub fetchrow_array      { return $dbh->{array} ? shift @{$dbh->{array}} : ();   }
 sub finish              { $dbh->{sql} = undef }
 
-sub connect { new(@_); $dbh }
-
-sub can { 1 }
+sub connect     { new(@_); $dbh }
+sub disconnect  { }
+sub can         { 1 }
 
 DESTROY { }
-
-END { }
+END     { }
 
 1;
-

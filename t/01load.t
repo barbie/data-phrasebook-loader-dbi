@@ -24,6 +24,7 @@ BEGIN {
         $mock = Test::MockObject->new();
         $mock->fake_module( 'DBI',
                     'connect'           => \&BookDB::connect,
+                    'disconnect'        => \&BookDB::disconnect,
                     'prepare'           => \&BookDB::prepare,
                     'prepare_cached'    => \&BookDB::prepare_cached,
                     'rebind'            => \&BookDB::rebind,
@@ -36,6 +37,7 @@ BEGIN {
         );
         $mock->fake_new( 'DBI' );
         $mock->mock( 'connect',             \&BookDB::connect );
+        $mock->mock( 'disconnect',          \&BookDB::disconnect );
         $mock->mock( 'prepare',             \&BookDB::prepare );
         $mock->mock( 'prepare_cached',      \&BookDB::prepare_cached );
         $mock->mock( 'rebind',              \&BookDB::rebind );
