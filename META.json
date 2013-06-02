@@ -1,6 +1,6 @@
 {
     "name": "Data-Phrasebook-Loader-DBI",
-    "version": "0.14",
+    "version": "0.15",
     "abstract": "Loader class for phrasebook implementations using DBI",
     "author": [
         "Barbie (BARBIE) <barbie@cpan.org>"
@@ -48,7 +48,7 @@
     "provides": {
         "Data::Phrasebook::Loader::DBI": {
             "file": "lib/Data/Phrasebook/Loader/DBI.pm",
-            "version": "0.14"
+            "version": "0.15"
         }
     },
     "no_index": {

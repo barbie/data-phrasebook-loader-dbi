@@ -1,5 +1,6 @@
 # Changes log for Data::Phrasebook::Loader::DBI
 
+0.15	2013-06-02
         - change file dates changed to meet W3CDTF standards.
         - clarified licensing text.
         - fixed test warnings.
