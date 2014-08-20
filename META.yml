@@ -36,6 +36,7 @@ no_index:
 resources:
   license:    http://www.perlfoundation.org/artistic_license_2_0
   bugtracker: http://rt.cpan.org/Public/Dist/Display.html?Name=Data-Phrasebook-Loader-DBI
+  repository: http://github.com/barbie/data-phrasebook-loader-dbi
 
 meta-spec:
    version:   1.3
