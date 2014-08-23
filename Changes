@@ -1,6 +1,7 @@
 Changes log for Data-Phrasebook-Loader-DBI
 ==========================================
 
+0.16	2014-08-23
         - fixed license fields in META.json to be lists.
         - extended test suite.
         - added cpanminus to installation instructions.

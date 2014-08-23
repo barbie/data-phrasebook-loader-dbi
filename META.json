@@ -1,6 +1,6 @@
 {
     "name": "Data-Phrasebook-Loader-DBI",
-    "version": "0.15",
+    "version": "0.16",
     "abstract": "Loader class for phrasebook implementations using DBI",
     "author": [
         "Barbie (BARBIE) <barbie@cpan.org>"
@@ -13,7 +13,7 @@
         "version": "2",
         "url": "http://search.cpan.org/dist/CPAN-Meta/lib/CPAN/Meta/Spec.pm"
     },
-    "generated_by": "Hand 1.0",
+    "generated_by": "The Hand of Barbie 1.0",
     "keywords" : [
         "abstract",
         "data",
@@ -48,7 +48,7 @@
     "provides": {
         "Data::Phrasebook::Loader::DBI": {
             "file": "lib/Data/Phrasebook/Loader/DBI.pm",
-            "version": "0.15"
+            "version": "0.16"
         }
     },
     "no_index": {
